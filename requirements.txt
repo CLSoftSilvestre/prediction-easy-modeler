@@ -1,4 +1,3 @@
 Flask~=1.1
 pyodbc
 pymysql
-azure.storage.blob

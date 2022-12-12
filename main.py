@@ -3,7 +3,7 @@ This script runs the WbApp application using a development server.
 """
 from distutils.log import debug
 from os import environ
-from WbApp import app
+from webapp import app
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')

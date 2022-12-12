@@ -1,0 +1,97 @@
+"""
+Routes and views for the flask application.
+"""
+
+from datetime import datetime
+from flask import render_template,redirect,request,url_for
+from webapp import app
+from webapp.tarefas import tarefa
+from webapp.predictionmodel import PredictionModel
+
+@app.route('/')
+@app.route('/home')
+def home():
+    """Renders the home page."""
+    return render_template(
+        'index.html',
+        title='Home Page',
+        year=datetime.now().year,
+    )
+
+@app.route('/contact')
+def contact():
+    """Renders the contact page."""
+    return render_template(
+        'contact.html',
+        title='Contact',
+        year=datetime.now().year,
+        message='Your contact page.'
+    )
+
+@app.route('/about')
+def about():
+    """Renders the about page."""
+    return render_template(
+        'about.html',
+        title='About',
+        year=datetime.now().year,
+        message='Your application description page.',
+        tarefas=tarefa.GetAll()
+    )
+
+@app.route('/detalhe/<id>')
+def detalhe(id):
+    """Renders the about page."""
+    return render_template(
+        'detalhe.html',
+        title='Detalhe',
+        year=datetime.now().year,
+        message='Your application description page.',
+        t=tarefa(1,"Enviar email")
+    )
+
+@app.route('/inserirtarefa',methods=["POST","PUT"])
+def inserirtarefa():
+    if request.method == "POST":
+        result = request.form
+
+        id= result["txtId"]
+        desc= result["txtDesc"]
+        estado= result["txtEstado"]
+
+        t = tarefa(id,desc,estado)
+
+        t.Inserir()
+    
+    return redirect(url_for('about'))
+
+@app.route("/models")
+def listmodels():
+    lista = PredictionModel.GetAll()
+
+    return render_template(
+        "models.html",
+        titulo = "Prediction models",
+        models = lista
+        )
+
+"""Upload data file"""
+@app.route('/upload/<id>',methods=["POST"])
+def upload(id):
+    if request.method =="POST":
+        result =request.files['file']
+        result.save("C:/Temp/python/" + result.filename )
+
+        """
+        t = Tarefa()
+        t.Get(id)
+        with open("C:/Temp/python/" + result.filename ,"rb") as data:
+            AzureUtils.BlobUpload(result.filename,data,id)
+            t.Url = "https://ac2020storage.blob.core.windows.net/python-sergio/" + result.filename
+            t.Update()
+        """
+    return redirect(url_for('home'))
+
+
+    
+
