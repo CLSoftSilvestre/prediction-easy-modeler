@@ -6,6 +6,7 @@ from datetime import datetime
 from flask import render_template,redirect,request,url_for
 from WbApp import app
 from WbApp.tarefas import tarefa
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -62,6 +63,23 @@ def inserirtarefa():
         t.Inserir()
     
     return redirect(url_for('about'))
+
+"""Upload data file"""
+@app.route('/upload/<id>',methods=["POST"])
+def upload(id):
+    if request.method =="POST":
+        result =request.files['file']
+        result.save("C:/Temp/python/" + result.filename )
+
+        """
+        t = Tarefa()
+        t.Get(id)
+        with open("C:/Temp/python/" + result.filename ,"rb") as data:
+            AzureUtils.BlobUpload(result.filename,data,id)
+            t.Url = "https://ac2020storage.blob.core.windows.net/python-sergio/" + result.filename
+            t.Update()
+        """
+    return redirect(url_for('home'))
 
 
     
